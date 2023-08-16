@@ -1,0 +1,59 @@
+#Problem:
+"After becoming famous, the CodeBots decided to move into a new building together.
+Each of the rooms has a different cost, and some of them are free,
+but there's a rumour that all the free rooms are haunted! Since the CodeBots are quite superstitious,
+they refuse to stay in any of the free rooms, or any of the rooms below any of the free rooms.
+Given matrix, a rectangular matrix of integers, where each value represents the cost of the room,
+your task is to return the total sum of all rooms that are suitable for the CodeBots
+(ie: add up all the values that don't appear below a 0)."
+
+def solution(matrix):
+    # Initialize total cost to 0
+    total_cost = 0
+    
+    # Use a set to keep track of haunted columns.
+    # Sets don't have duplicates, so more efficient in the case where multiple entries in the same column are zero
+    haunted_columns = set() 
+
+    # Iterate through each row
+    for row in matrix:
+        # Initialize column index counter
+        # This resets at the start of each row, effectively keeping track of what column we are on.
+        j = 0 
+        # Iterate through each room in the row
+        for room_cost in row:
+            # If the room is haunted
+            if room_cost == 0:
+                haunted_columns.add(j)
+            # If the room is not in a haunted column, add its cost
+            elif j not in haunted_columns:
+                total_cost += room_cost
+            
+            # IMPORTANT: Increment the column index counter for the next room
+            j += 1
+
+    return total_cost
+
+
+"A simpler method is to iterate over a range object so that we don't have to separately keep track of the row:"
+
+def solution(matrix):
+    # Initialize total cost to 0
+    total_cost = 0
+    
+    # Use a list to keep track of haunted columns
+    haunted_columns = []
+
+    # Iterate through each row
+    for row in matrix:
+        # Iterate through columns using range
+        for j in range(len(row)):
+            room_cost = row[j]
+            # If the room is haunted
+            if room_cost == 0 and j not in haunted_columns:
+                haunted_columns.append(j)
+            # If the room is not in a haunted column, add its cost
+            elif j not in haunted_columns:
+                total_cost += room_cost
+
+    return total_cost
