@@ -1,0 +1,43 @@
+"Some people are standing in a row in a park.
+There are trees between them which cannot be moved.
+Your task is to rearrange the people by their heights in a non-descending order without moving the trees.
+People can be very tall!"
+
+Example
+
+For a = [-1, 150, 190, 170, -1, -1, 160, 180], the output should be
+solution(a) = [-1, 150, 160, 170, -1, -1, 180, 190].
+
+def solution(a):
+    # List comprehension to gather all positive heights
+    b = [num for num in a if num > -1]
+    b.sort()  # This will sort the list b in-place
+
+    for i in range(len(a)):
+        if a[i] != -1:
+            a[i] = b[0]
+            b = b[1:]  # Instead of pop(0) which can be inefficient, just slice the list
+    return a
+
+# The main problem here was that the two lists were of different sizes, so simply iterating through them both wouldn't do.
+# My solution was to iterate through the bigger list and simply cut off the first element of the second list each iteration, thus
+# saving myself from having to find a way to calibrate two loops.
+
+# Chat GpT suggested a better solution using the iter() function:
+
+def solution(a):
+    b = sorted([num for num in a if num != -1])
+    iter_b = iter(b)
+    
+    for i in range(len(a)):
+        if a[i] != -1:
+            a[i] = next(iter_b)
+            
+    return a
+
+# Here, rather than going through the potentially costly process of slicing the list, we create an iterable out of the 
+# sorted list. This way, we can simply use the next() function to return the next element of the sorted list b.
+# So, using the next() and iter() functions together,I can retrieve the items in sequence without managing indexes or modifying list.
+# I'll keep this in mind next time I need to get two lists of different sizes to interact. (Note that next() raises an exception 
+# after the iterable is done, so this method won't work if, for example, the length of the subset of the first list is not the same 
+# as the length of the second list.
